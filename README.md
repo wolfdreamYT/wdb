@@ -17,6 +17,6 @@ Yes, yes you can! You can legally download the folder with the AI source code in
 
 # REMEMBER THIS:
 
-    All users who have downloaded OR used the website are agreeing to our Terms Of Service. if you beleive there is a mistake in our code, please open a ticket/report the        issue to our discord server.
+All users who have downloaded OR used the website are agreeing to our Terms Of Service. if you beleive there is a mistake in our code, please open a ticket/report the        issue to our discord server.
 
 # Have fun!
