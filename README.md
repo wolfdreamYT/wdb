@@ -8,12 +8,12 @@
 
 # how to use:
 
-    This is WolfDream Bot, an AI assistant of ours. WDB1.5 - Plus! is our main model, and is free! You can use it to find good jokes, search up questions, and chat with it!      It is our most known model, but still could be improved!
+This is WolfDream Bot, an AI assistant of ours. WDB1.5 - Plus! is our main model, and is free! You can use it to find good jokes, search up questions, and chat with it!      It is our most known model, but still could be improved!
 
-    This is why we bring to you **model 3.0** Series! Just by activating your browser account you can get access to latest features! We will still update the 1.5 Plus! model     but not as much as the newer models.
+This is why we bring to you **model 3.0** Series! Just by activating your browser account you can get access to latest features! We will still update the 1.5 Plus! model     but not as much as the newer models.
 
 # Can i tweak it?
-    Yes, yes you can! You can legally download the folder with the AI source code in it, and you can edit the dataset, model codes, and more! Remember, these models are          **base models** and can be used for more advanced AIs. We just make base/template models for you to build onto!
+Yes, yes you can! You can legally download the folder with the AI source code in it, and you can edit the dataset, model codes, and more! Remember, these models are          **base models** and can be used for more advanced AIs. We just make base/template models for you to build onto!
 
 # REMEMBER THIS:
 
