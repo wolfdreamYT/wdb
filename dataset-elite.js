@@ -1,5 +1,7 @@
 const wdbResponses = {
   "hello": "Hi there! How can I help you?",
+  "thanks": "no problemo!",
+  "thankyou!": "Hasta La Vista, baby!",
   "hi": "Hi there! What can i do today for you?",
   "yo": "Hi there! how may i assist you?",
   "how are you": "I'm just code, but thanks for asking!",
