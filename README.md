@@ -1,10 +1,4 @@
-`#######################################################
-`#                                                     #
-`#                WDB - Free base models               #
-`#              Created On May 15th, 2025              #
-`#             Created By: Nicholas Machan             #
-`#                                                     #
-`#######################################################
+# WDB Series
 
 # DO NOT DO THE FOLLWING:
 
