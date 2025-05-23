@@ -1,0 +1,266 @@
+<script type="module">
+  import { setUserTitle } from './permissions.js';
+  import { validKeys } from './keygen.js';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('keyForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const inputKey = document.getElementById('accessKey').value.trim().toUpperCase();
+
+      if (validKeys.includes(inputKey)) {
+        await setUserTitle("elite+");
+        alert("Key accepted! You now have elite+ access.");
+        window.location.href = "model3.0.html";
+      } else {
+        alert("Invalid key.");
+      }
+    });
+
+    const randomKey = validKeys[Math.floor(Math.random() * validKeys.length)];
+    document.getElementById("exampleKey").textContent = `Example: ${randomKey}`;
+  });
+</script>
+
+<h2>Enter your access key to unlock Elite+</h2>
+<form id="keyForm">
+  <input type="text" id="accessKey" placeholder="Enter key..." />
+  <button type="submit">Unlock</button>
+</form>
+  <style>
+    :root {
+      --color-bg: #1f1f2e;
+      --color-chat-bg: #2b2b3d;
+      --color-user: #6c63ff;
+      --color-user-hover: #5750e6;
+      --color-bot: #444;
+      --color-text: #fff;
+      --color-text-light: #ddd;
+      --radius: 12px;
+      --font-family: 'Inter', sans-serif;
+      --max-width: 600px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background-color: var(--color-bg);
+      font-family: var(--font-family);
+      color: var(--color-text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px 10px;
+      gap: 15px;
+    }
+
+    header {
+      width: 100%;
+      max-width: var(--max-width);
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-weight: 700;
+      font-size: 2.2rem;
+      letter-spacing: 0.05em;
+    }
+
+    header p {
+      margin: 5px 0 0;
+      font-weight: 400;
+      color: var(--color-text-light);
+      font-size: 1rem;
+      font-style: italic;
+    }
+
+    #chat {
+      width: 100%;
+      max-width: var(--max-width);
+      height: 70vh;
+      min-height: 350px;
+      background: var(--color-chat-bg);
+      border-radius: var(--radius);
+      padding: 20px;
+      overflow-y: auto;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      scroll-behavior: smooth;
+      position: absolute;
+      left: 300px;
+      top: 100px;
+    }
+
+    .message {
+      padding: 12px 18px;
+      border-radius: var(--radius);
+      max-width: 75%;
+      line-height: 1.5;
+      word-wrap: break-word;
+      font-size: 1rem;
+      white-space: pre-wrap;
+      user-select: text;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+      transition: background 0.3s ease;
+    }
+
+    .user {
+      background: var(--color-user);
+      align-self: flex-end;
+      color: var(--color-text);
+      text-align: right;
+      box-shadow: 0 2px 10px var(--color-user);
+    }
+
+    .bot {
+      background: var(--color-bot);
+      align-self: flex-start;
+      color: var(--color-text-light);
+      box-shadow: inset 0 0 8px rgba(255,255,255,0.05);
+    }
+
+    #inputArea {
+      width: 100%;
+      max-width: var(--max-width);
+      display: flex;
+      gap: 12px;
+      position: absolute;
+      left: 300px;
+      top: 490px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 14px 16px;
+      border-radius: var(--radius);
+      border: none;
+      font-size: 1rem;
+      outline-offset: 2px;
+      transition: box-shadow 0.3s ease;
+    }
+
+    input[type="text"]:focus {
+      box-shadow: 0 0 6px 2px var(--color-user);
+    }
+
+    button {
+      padding: 14px 22px;
+      background: var(--color-user);
+      border: none;
+      border-radius: var(--radius);
+      color: var(--color-text);
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      flex-shrink: 0;
+      user-select: none;
+      font-size: 1rem;
+    }
+
+    #clearBtn {
+      background: #e03e3e;
+      margin-left: auto;
+      font-weight: 600;
+      border-radius: var(--radius);
+      padding: 14px 22px;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.3s ease;
+    }
+
+    #clearBtn:hover,
+    #clearBtn:focus {
+      background: #b63030;
+      outline: none;
+    }
+
+    @media (max-width: 700px) {
+      #chat {
+        height: 50vh;
+      }
+      header h1 {
+        font-size: 1.8rem;
+      }
+      #inputArea {
+        flex-direction: column;
+      }
+      button, #clearBtn {
+        width: 100%;
+        padding: 14px 0;
+      }
+      #clearBtn {
+        margin-left: 0;
+      }
+    }
+
+    @media (max-width: 400px) {
+      #chat {
+        height: 45vh;
+        padding: 15px;
+      }
+      input[type="text"] {
+        font-size: 0.9rem;
+        padding: 12px 14px;
+      }
+      button, #clearBtn {
+        font-size: 0.9rem;
+        padding: 12px 0;
+      }
+    }
+    .header {
+      left: 300px;
+      top: 10px;
+      position: absolute;
+    }
+    .header2 {
+      left: 300px;
+      top: 60px;
+      position: absolute;
+    }
+    .choose-model {
+      padding: 14px 22px;
+      background: var(--color-user);
+      border: none;
+      border-radius: var(--radius);
+      color: var(--color-text);
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      flex-shrink: 0;
+      user-select: none;
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+    .model-unavailable {
+      padding: 14px 22px;
+      background-color: #616161;
+      border: none;
+      border-radius: var(--radius);
+      font-weight: 600;
+      cursor: default;
+      flex-shrink: 0;
+      user-select: none;
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+    .purchase {
+      padding: 14px 22px;
+      background-color: #bd8826;
+      border: none;
+      border-radius: var(--radius);
+      font-weight: 600;
+      cursor: default;
+      flex-shrink: 0;
+      user-select: none;
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+  </style>

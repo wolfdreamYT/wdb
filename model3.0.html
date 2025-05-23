@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WDB3.0</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.min.js"></script>
+  <style>
+    :root {
+      --color-bg: #1f1f2e;
+      --color-chat-bg: #2b2b3d;
+      --color-user: #6c63ff;
+      --color-user-hover: #5750e6;
+      --color-bot: #444;
+      --color-text: #fff;
+      --color-text-light: #ddd;
+      --radius: 12px;
+      --font-family: 'Inter', sans-serif;
+      --max-width: 600px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background-color: var(--color-bg);
+      font-family: var(--font-family);
+      color: var(--color-text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px 10px;
+      gap: 15px;
+    }
+
+    header {
+      width: 100%;
+      max-width: var(--max-width);
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-weight: 700;
+      font-size: 2.2rem;
+      letter-spacing: 0.05em;
+    }
+
+    header p {
+      margin: 5px 0 0;
+      font-weight: 400;
+      color: var(--color-text-light);
+      font-size: 1rem;
+      font-style: italic;
+    }
+
+    #chat {
+      width: 100%;
+      max-width: var(--max-width);
+      height: 70vh;
+      min-height: 350px;
+      background: var(--color-chat-bg);
+      border-radius: var(--radius);
+      padding: 20px;
+      overflow-y: auto;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      scroll-behavior: smooth;
+      position: absolute;
+      left: 300px;
+      top: 100px;
+    }
+
+    .message {
+      padding: 12px 18px;
+      border-radius: var(--radius);
+      max-width: 75%;
+      line-height: 1.5;
+      word-wrap: break-word;
+      font-size: 1rem;
+      white-space: pre-wrap;
+      user-select: text;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+      transition: background 0.3s ease;
+    }
+
+    .user {
+      background: var(--color-user);
+      align-self: flex-end;
+      color: var(--color-text);
+      text-align: right;
+      box-shadow: 0 2px 10px var(--color-user);
+    }
+
+    .bot {
+      background: var(--color-bot);
+      align-self: flex-start;
+      color: var(--color-text-light);
+      box-shadow: inset 0 0 8px rgba(255,255,255,0.05);
+    }
+
+    #inputArea {
+      width: 100%;
+      max-width: var(--max-width);
+      display: flex;
+      gap: 12px;
+      position: absolute;
+      left: 300px;
+      top: 490px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 14px 16px;
+      border-radius: var(--radius);
+      border: none;
+      font-size: 1rem;
+      outline-offset: 2px;
+      transition: box-shadow 0.3s ease;
+    }
+
+    input[type="text"]:focus {
+      box-shadow: 0 0 6px 2px var(--color-user);
+    }
+
+    button {
+      padding: 14px 22px;
+      background: var(--color-user);
+      border: none;
+      border-radius: var(--radius);
+      color: var(--color-text);
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      flex-shrink: 0;
+      user-select: none;
+      font-size: 1rem;
+    }
+
+    #clearBtn {
+      background: #e03e3e;
+      margin-left: auto;
+      font-weight: 600;
+      border-radius: var(--radius);
+      padding: 14px 22px;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.3s ease;
+    }
+
+    #clearBtn:hover,
+    #clearBtn:focus {
+      background: #b63030;
+      outline: none;
+    }
+
+    @media (max-width: 700px) {
+      #chat {
+        height: 50vh;
+      }
+      header h1 {
+        font-size: 1.8rem;
+      }
+      #inputArea {
+        flex-direction: column;
+      }
+      button, #clearBtn {
+        width: 100%;
+        padding: 14px 0;
+      }
+      #clearBtn {
+        margin-left: 0;
+      }
+    }
+
+    @media (max-width: 400px) {
+      #chat {
+        height: 45vh;
+        padding: 15px;
+      }
+      input[type="text"] {
+        font-size: 0.9rem;
+        padding: 12px 14px;
+      }
+      button, #clearBtn {
+        font-size: 0.9rem;
+        padding: 12px 0;
+      }
+    }
+    .header {
+      left: 300px;
+      top: 10px;
+      position: absolute;
+    }
+    .header2 {
+      left: 300px;
+      top: 60px;
+      position: absolute;
+    }
+    .choose-model {
+      padding: 14px 22px;
+      background: var(--color-user);
+      border: none;
+      border-radius: var(--radius);
+      color: var(--color-text);
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      flex-shrink: 0;
+      user-select: none;
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+    .model-unavailable {
+      padding: 14px 22px;
+      background-color: #616161;
+      border: none;
+      border-radius: var(--radius);
+      font-weight: 600;
+      cursor: default;
+      flex-shrink: 0;
+      user-select: none;
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+    .purchase {
+      padding: 14px 22px;
+      background-color: #bd8826;
+      border: none;
+      border-radius: var(--radius);
+      font-weight: 600;
+      cursor: default;
+      flex-shrink: 0;
+      user-select: none;
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div style="display: flex; width: 100%;">
+
+    <aside id="sidebar" style="width: 220px; background-color: #12121a; color: white; padding: 20px; min-height: 100vh; position: fixed;">
+      <h2 style="margin-top: 0;">Models</h2>
+      <ul id="chatroomList" style="list-style: none; padding: 0;"></ul>
+      <button class="choose-model" onclick="window.location.href='model1.0.html'">Model 1.0</button>
+      <button class="choose-model" onclick="window.location.href='model1.5.html'">Model 1.5</button>
+      <button class="choose-model" onclick="window.location.href='index.html'">Model 1.5 - Plus</button>
+      <button class="choose-model" onclick="window.location.href='model3.0.html'">Model 3.0</button>
+      <button class="choose-model" onclick="window.location.href='model3.0pro.html'">Model 3.0 Pro</button>
+      <hr>
+      <br>
+      <button class="purchase" onclick="window.location.href='purchase.html'">Purchase Elite+</button>
+      <button class="purchase" onclick="window.location.href='terminal.html'">Terminal</button>
+    </aside>
+
+    <div style="flex-grow: 1;">
+      <header>
+        <h1 class="header">WDB3.0 - Infinity</h1>
+        <p class="header2">By messaging our AI, you agree to our <a href="terms.html">Terms of Service</a></p>
+      </header>
+
+      <div id="chat" role="log" aria-live="polite" aria-relevant="additions"></div>
+
+      <div id="inputArea">
+        <input type="text" id="userInput" placeholder="Type something..." aria-label="Chat input" autocomplete="off" />
+        <button id="sendBtn" aria-label="Send message">Send</button>
+        <button id="clearBtn" aria-label="Clear chat">Clear</button>
+      </div>
+    </div>
+  </div>
+  <script src="dataset-elite.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.1/math.min.js"></script>
+<script type="module">
+  import { wdbResponses } from '/dataset.js';
+
+  window.getFallbackAnswer = function (query) {
+    return wdbResponses[query.toLowerCase().replace(/\s+/g, '_')] || "Sorry, I couldn’t find reliable info on that.";
+  };
+</script>
+<script>
+  function extractWikipediaQuery(text) {
+    return text
+      .toLowerCase()
+      .replace(/^what is|^who is|^what is the|^who is the|^tell me about|^define|^explain|^give me info on|^what are|^what's/i, '')
+      .trim()
+      .replace(/\?$/, '') 
+      .replace(/\s+/g, '_'); 
+  }
+
+  async function fetchBestDescription(query) {
+    const wikiUrl = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`;
+
+    try {
+      const wikiResponse = await fetch(wikiUrl);
+      if (wikiResponse.status === 404) throw new Error("Not found on Wikipedia");
+
+      const wikiData = await wikiResponse.json();
+      if (wikiData.extract) return wikiData.extract;
+      throw new Error("No summary found");
+    } catch {
+      try {
+        const ddgUrl = `https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json&no_redirect=1`;
+        const ddgResponse = await fetch(ddgUrl);
+        const ddgData = await ddgResponse.json();
+
+        if (ddgData.Abstract) return ddgData.Abstract;
+        if (ddgData.RelatedTopics?.length > 0 && ddgData.RelatedTopics[0].Text)
+          return ddgData.RelatedTopics[0].Text;
+
+        throw new Error("Nothing useful from DDG");
+      } catch {
+        try {
+          const dbpediaUrl = `https://api.dbpedia-spotlight.org/en/annotate?text=${encodeURIComponent(query)}&confidence=0.5`;
+          const dbpediaResponse = await fetch(dbpediaUrl, {
+            headers: { Accept: "application/json" },
+          });
+          const dbpediaData = await dbpediaResponse.json();
+
+          if (
+            dbpediaData.Resources &&
+            dbpediaData.Resources.length > 0 &&
+            dbpediaData.Resources[0]['@URI']
+          ) {
+            return `According to DBpedia: ${dbpediaData.Resources[0]['@URI']}`;
+          }
+
+          throw new Error("No resources from DBpedia");
+        } catch {
+          try {
+            const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=1`;
+            const geoRes = await fetch(geoUrl);
+            const geoData = await geoRes.json();
+
+            if (geoData.results?.length > 0) {
+              const place = geoData.results[0];
+              return `Location Info: ${place.name}, ${place.country}. Latitude: ${place.latitude}, Longitude: ${place.longitude}`;
+            }
+
+            throw new Error("No geo info");
+          } catch {
+            return window.getFallbackAnswer(query);
+          }
+        }
+      }
+    }
+  }
+
+</script>
+<script>
+  const fineTune = (text) => {
+    return text
+      .replace("Hi there", "Hey!")
+      .replace("How can I help you", "What can I do for you?")
+      .replace("I'm just code", "I'm all code, no feelings 😄")
+      .replace("See you later", "Catch you later!");
+  };
+
+  let lastIntent = null;
+  const chat = document.getElementById('chat');
+  const input = document.getElementById('userInput');
+  const sendBtn = document.getElementById('sendBtn');
+  const clearBtn = document.getElementById('clearBtn');
+
+  input.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+      event.preventDefault(); 
+      sendBtn.click(); 
+    }
+  });
+
+
+  function appendToChat(message, sender) {
+    const bubble = document.createElement('div');
+    bubble.className = `message ${sender}`;
+    bubble.textContent = message;
+    chat.appendChild(bubble);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  function anyMatch(input, phrases) {
+    return phrases.some(p => input.includes(p));
+  }
+
+  sendBtn.onclick = async () => {
+    const text = input.value.trim();
+    if (!text) return;
+
+    appendToChat(text, 'user');
+    input.value = '';
+
+    const lower = text.toLowerCase();
+
+    if (anyMatch(lower, [
+      "another", "another one", "better one", 
+      "got more", "more please", "what's another", 
+      "tell me more", "something else"
+    ])) {
+
+      if (lastIntent === "joke") {
+        const joke = await fetchJoke();
+        appendToChat(joke, 'bot');
+          return;
+      } else if (lastIntent === "fact") {
+        const fact = await fetchFact();
+        appendToChat(fact, 'bot');
+        return;
+      }
+    }
+
+    if (lower.includes("joke")) {
+      const joke = await fetchJoke();
+      appendToChat(joke, 'bot');
+      lastIntent = "joke";
+      return;
+    }
+    if (lower.includes("fact")) {
+      const fact = await fetchFact();
+      appendToChat(fact, 'bot');
+      lastIntent = "fact";
+      return;
+    }
+
+    if (isJokeQuery(text)) {
+      const joke = await fetchJoke();
+      appendToChat(joke, 'bot');
+      return;
+    }
+
+    if (isWeatherQuery(text)) {
+      const loc = extractLocation(text);
+      const weather = await fetchWeather(loc);
+      appendToChat(weather || "Couldn't get the weather right now.", 'bot');
+      return;
+    }
+
+    if (isFactualQuestion(text)) {
+      const answer = await fetchBestDescription(text);
+      appendToChat(answer, 'bot');
+      return;
+    }
+
+    const intentResponse = findBestIntent(text);
+    if (intentResponse) {
+      appendToChat(fineTune(intentResponse), 'bot');
+    } else {
+      appendToChat("Sorry, I don't understand that yet.", 'bot');
+    }
+  };
+
+  function normalize(str) {
+    return str
+      .toLowerCase()
+      .replace(/[^\w\s]/g, '')
+      .split(/\s+/)
+      .filter(word => !['what', 'is', 'a', 'an', 'the', 'of', 'to', 'for', 'how', 'do', 'i'].includes(word));
+  }
+
+  function findBestIntent(input) {
+    const inputTokens = normalize(input);
+    let bestScore = 0;
+    let bestKey = null;
+
+    for (const key in wdbResponses) {
+      const keyTokens = normalize(key);
+      const common = inputTokens.filter(token => keyTokens.includes(token)).length;
+      if (common > bestScore) {
+        bestScore = common;
+        bestKey = key;
+      }
+    }
+
+    return bestScore > 0 ? wdbResponses[bestKey] : null;
+  }
+
+  function isWeatherQuery(text) {
+    const keywords = ['weather', 'rain', 'snow', 'cloud', 'wind', 'temperature', 'forecast'];
+    return keywords.some(k => text.toLowerCase().includes(k));
+  }
+
+  function isFactualQuestion(text) {
+    return text.toLowerCase().startsWith("what is") || text.toLowerCase().startsWith("who is") || text.toLowerCase().startsWith("where is");
+  }
+
+  function isJokeQuery(text) {
+    return text.toLowerCase().includes("joke");
+  }
+
+  function extractLocation(text) {
+    const match = text.match(/\b(?:in|at)\s+([a-z\s]+)$/i);
+    return match ? match[1].trim() : null;
+  }
+
+  function capitalize(name) {
+    return name.charAt(0).toUpperCase() + name.slice(1);
+  }
+
+  async function fetchJoke() {
+    try {
+      const res = await fetch("https://v2.jokeapi.dev/joke/Any?safe-mode");
+      const data = await res.json();
+      return data.type === "single" ? data.joke : `${data.setup} - ${data.delivery}`;
+    } catch {
+      return "Sorry, I couldn't fetch a joke right now.";
+    }
+  }
+
+  async function fetchWeather(location) {
+    let lat, lon, city;
+
+    try {
+      if (location) {
+        const geoRes = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}`);
+        const geoData = await geoRes.json();
+        if (!geoData.length) return null;
+        lat = geoData[0].lat;
+        lon = geoData[0].lon;
+        city = geoData[0].display_name.split(',')[0];
+      } else {
+        const ipRes = await fetch('https://ipapi.co/json/');
+        const ipData = await ipRes.json();
+        lat = ipData.latitude;
+        lon = ipData.longitude;
+        city = ipData.city;
+      }
+
+      const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&hourly=precipitation,windspeed_10m,cloudcover&timezone=auto`);
+      const data = await weatherRes.json();
+
+      if (!data.current_weather) return null;
+
+      const cw = data.current_weather;
+      const clouds = data.hourly?.cloudcover?.[0];
+      const precipitation = data.hourly?.precipitation?.[0];
+      const windSpeed = cw.windspeed;
+
+      return `In ${city}, it's ${cw.temperature}°C with ${clouds}% cloud cover, ${precipitation}mm of rain, and wind at ${windSpeed} km/h.`;
+
+    } catch {
+      return "Could not fetch the weather.";
+    }
+  }
+  const SPORTS_API_KEY = '3'; 
+
+  async function fetchLatestSports(query) {
+    const team = encodeURIComponent(query);
+    const url = `https://www.thesportsdb.com/api/v1/json/${SPORTS_API_KEY}/searchteams.php?t=${team}`;
+    try {
+      const teamResponse = await fetch(url);
+      const teamData = await teamResponse.json();
+      if (!teamData.teams) return 'Team not found.';
+
+      const teamId = teamData.teams[0].idTeam;
+      const eventsUrl = `https://www.thesportsdb.com/api/v1/json/${SPORTS_API_KEY}/eventslast.php?id=${teamId}`;
+      const eventsResponse = await fetch(eventsUrl);
+      const eventsData = await eventsResponse.json();
+
+      if (!eventsData.results) return 'No recent matches found.';
+      const lastEvent = eventsData.results[0];
+      return `Latest game: ${lastEvent.strEvent} on ${lastEvent.dateEvent} — Score: ${lastEvent.intHomeScore} - ${lastEvent.intAwayScore}`;
+    } catch (e) {
+      return 'Error fetching sports data.';
+    }
+  }
+
+  async function handleUserQuery(message) {
+    message = message.toLowerCase();
+
+    if (message.includes('news')) {
+      const topicMatch = message.match(/news (about )?(.*)/);
+      const topic = topicMatch ? topicMatch[2] : 'latest';
+      return await fetchNews(topic);
+    }
+
+    if (message.includes('sport') || message.includes('game') || message.includes('match')) {
+      const sportMatch = message.match(/(latest|last|recent)?\s*(game|match|sports)?\s*(of|about)?\s*(.*)/);
+      const team = sportMatch ? sportMatch[4] : 'latest';
+      return await fetchLatestSports(team.trim());
+    }
+
+    return "Sorry, I don't understand that. Try asking about news or sports.";
+  }
+
+  async function fetchFact() {
+    try {
+      const res = await fetch("https://uselessfacts.jsph.pl/random.json?language=en");
+      const data = await res.json();
+      return data.text;
+    } catch {
+      return "Sorry, I couldn't fetch a fact right now.";
+    }
+  }
+
+</script>
+<script type="module">
+  import { getUserTitle } from './permissions.js';
+
+  (async () => {
+    const title = await getUserTitle();
+    if (title !== 'elite+') {
+      alert('Access denied. You need the "elite+" access to enter.');
+      window.location.href = 'index.html';
+    }
+  })();
+</script>
+
+</body>
+</html>
