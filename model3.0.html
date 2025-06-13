@@ -6,6 +6,7 @@
   <title>WDB3.0</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.min.js"></script>
+  <script src="check.js"></script>
   <style>
     :root {
       --color-bg: #1f1f2e;
@@ -447,6 +448,12 @@
       return;
     }
 
+    const custom = await fetchCustomContent(text);
+    if (custom) {
+      appendToChat(custom, 'bot');
+      return;
+    }
+
     const intentResponse = findBestIntent(text);
     if (intentResponse) {
       appendToChat(fineTune(intentResponse), 'bot');
@@ -598,17 +605,83 @@
     }
   }
 
-</script>
-<script type="module">
-  import { getUserTitle } from './permissions.js';
+  async function fetchCustomContent(message) {
+    const lower = message.toLowerCase();
 
-  (async () => {
-    const title = await getUserTitle();
-    if (title !== 'elite+') {
-      alert('Access denied. You need the "elite+" access to enter.');
-      window.location.href = 'index.html';
+    try {
+      const codeModule = await import('/code.js');
+
+      // Essay support
+      if (lower.includes("essay")) {
+        const essays = codeModule.essays || codeModule.default?.essays || [];
+        if (essays.length > 0) {
+          const randomEssay = essays[Math.floor(Math.random() * essays.length)];
+          return `Here's an essay:\n\n${randomEssay}`;
+        }
+        return "Sorry, no essays available.";
+      }
+
+      // Section keyword map
+      const sections = {
+        python: codeModule.python,
+        javascript: codeModule.javascript,
+        js: codeModule.javascript,
+        servers: codeModule.servers,
+        server: codeModule.servers,
+        html: codeModule.html_snippets,
+        html_snippets: codeModule.html_snippets,
+        website: codeModule.website_code,
+        game: codeModule.game_code,
+      };
+
+      for (const [keyword, list] of Object.entries(sections)) {
+        if (lower.includes(keyword)) {
+          // Handle label-based matching
+          if (Array.isArray(list)) {
+            if (typeof list[0] === "string") {
+              // It's the `servers` array
+              // Match specific types
+              if (lower.includes("flask")) {
+                return `Here's a Flask server:\n\n${list[1]}`;
+              }
+              if (lower.includes("node") || lower.includes("express")) {
+                return `Here's a Node.js Express server:\n\n${list[2]}`;
+              }
+              if (lower.includes("fastapi")) {
+                return `Here's a FastAPI server:\n\n${list[3]}`;
+              }
+              if (lower.includes("websocket")) {
+                return `Here's a WebSocket server:\n\n${list[4]}`;
+              }
+              if (lower.includes("socket")) {
+                return `Here's a basic Python socket server:\n\n${list[0]}`;
+              }
+
+              // Fallback: pick random
+              const random = list[Math.floor(Math.random() * list.length)];
+              return `Here's a server code snippet:\n\n${random}`;
+            } else if (list[0].label && list[0].code) {
+              // It's an object-based list (e.g. python, javascript, etc.)
+              const matched = list.find(snippet =>
+                lower.includes(snippet.label.toLowerCase())
+              );
+              if (matched) {
+                return `Here's a ${keyword} snippet for "${matched.label}":\n\n${matched.code}`;
+              } else {
+                return `Here's a ${keyword} snippet:\n\n${list[0].code}`;
+              }
+            }
+          }
+        }
+      }
+
+      return null;
+    } catch (e) {
+      console.error("Module fetch failed", e);
+      return "Sorry, something went wrong while fetching custom content.";
     }
-  })();
+  }
+  
 </script>
 
 </body>
